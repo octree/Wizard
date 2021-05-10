@@ -54,9 +54,9 @@ public class Callback: Decodable {
             let params = try args.map { try String(data: $0.toJSONData(), encoding: .utf8)! }.joined(separator: ", ")
             var source: String
             if params.count > 0 {
-                source = "window.__bridge__.Dispatcher.invoke('\(id)', \(params))"
+                source = "globalThis.__bridge__.Dispatcher.invoke('\(id)', \(params))"
             } else {
-                source = "window.__bridge__.Dispatcher.invoke('\(id)')"
+                source = "globalThis.__bridge__.Dispatcher.invoke('\(id)')"
             }
             context?.evaluateScript(source)
         } catch {
@@ -65,7 +65,7 @@ public class Callback: Decodable {
     }
 
     deinit {
-        let source = "window.__bridge__.Dispatcher.remove('\(id)')"
+        let source = "globalThis.__bridge__.Dispatcher.remove('\(id)')"
         context?.evaluateScript(source)
     }
 }

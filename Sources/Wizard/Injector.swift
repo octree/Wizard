@@ -233,31 +233,33 @@ extension Injector {
         """
     }
 
-    private func functionDefineCode(path: String, argsCount: Int) -> String {
+    private func functionDefineCode(id: String, path: String, argsCount: Int) -> String {
         if argsCount == 0 {
             return """
-            if(\(path)==null) { \(path) = function() { window.__bridge__.invoke('\(path)')} }
+            if(\(path)==null) { \(path) = function() { globalThis.__bridge__.invoke('\(id)')} }
             """
         }
 
         let args = (0 ..< argsCount).map { "a\($0)" }.joined(separator: ",")
         return """
-        if(\(path)==null) { \(path) = function(\(args)) { window.__bridge__.invoke('\(path)', \(args))} }
+        if(\(path)==null) { \(path) = function(\(args)) { globalThis.__bridge__.invoke('\(id)', \(args))} }
         """
     }
 
     private func scriptForPlugin(withPath path: String, argsCount: Int) -> String {
         let array = path.components(separatedBy: ".")
         let count = array.count - 1
-        var pathTmp = "this"
+        var pathTmp = array.first == "globalThis" ? "" : "globalThis"
         var code = ""
+
         var index = 0
         while index < count {
             pathTmp += ".\(array[index])"
             code += objectDefineJavascriptCode(path: pathTmp)
             index += 1
         }
-        return code + functionDefineCode(path: path, argsCount: argsCount)
+        pathTmp += ".\(array[count])"
+        return code + functionDefineCode(id: path, path: pathTmp, argsCount: argsCount)
     }
 }
 

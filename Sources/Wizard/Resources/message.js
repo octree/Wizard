@@ -1,8 +1,6 @@
 "use strict";
-var window = { }
-
-if (!window.__bridge__) {
-  Object.defineProperty(window, "__bridge__", {
+if (!globalThis.__bridge__) {
+  Object.defineProperty(globalThis, "__bridge__", {
     enumerable: false,
     configurable: false,
     writable: false,
@@ -10,7 +8,7 @@ if (!window.__bridge__) {
   });
 }
 
-Object.defineProperty(window.__bridge__, "VP", {
+Object.defineProperty(globalThis.__bridge__, "VP", {
     enumerable: false,
     configurable: false,
     writable: false,
@@ -40,7 +38,7 @@ Object.defineProperty(window.__bridge__, "VP", {
     }
 });
 
-Object.defineProperty(window.__bridge__, "Dispatcher", {
+Object.defineProperty(globalThis.__bridge__, "Dispatcher", {
   enumerable: false,
   configurable: false,
   writable: false,
@@ -48,19 +46,19 @@ Object.defineProperty(window.__bridge__, "Dispatcher", {
     __count: 0,
     cache: {},
     invoke: function invoke(id, ...args) {
-      var func = window.__bridge__.VP.get(id);
+      var func = globalThis.__bridge__.VP.get(id);
       func.apply(this, args);
     },
     push: function push(func) {
-      return window.__bridge__.VP.store(func)
+      return globalThis.__bridge__.VP.store(func)
     },
     remove: function(key) {
-      window.__bridge__.VP.remove(key)
+        globalThis.__bridge__.VP.remove(key)
     }
   }
 });
 
-Object.defineProperty(window.__bridge__, "invoke", {
+Object.defineProperty(globalThis.__bridge__, "invoke", {
   enumerable: false,
   configurable: false,
   writable: false,
@@ -69,7 +67,7 @@ Object.defineProperty(window.__bridge__, "invoke", {
     args.forEach((elt, idx) => {
       if (typeof elt === "function") {
         argMap["arg" + idx] = {
-          id: window.__bridge__.Dispatcher.push(elt)
+          id: globalThis.__bridge__.Dispatcher.push(elt)
         };
       } else {
         argMap["arg" + idx] = elt;
