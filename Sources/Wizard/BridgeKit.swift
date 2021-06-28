@@ -35,9 +35,9 @@ protocol BridgeKitMessageHandler: AnyObject {
     func handleBridgeMessage(message: [String: String])
 }
 
-@objc public class BridgeKit : NSObject, BridgeKitExports {
+@objc public class BridgeKit: NSObject, BridgeKitExports {
     weak var delegate: BridgeKitMessageHandler?
-    func postMessage(_ args: [String : String]) {
+    func postMessage(_ args: [String: String]) {
         delegate?.handleBridgeMessage(message: args)
     }
 }
