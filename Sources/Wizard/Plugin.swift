@@ -50,7 +50,6 @@ class Plugin<Arg: ArgsType>: AnyPlugin {
             let args = try JSONDecoder().decode(Arg.self, from: data)
             f(args)
         } catch {
-            print("🍎 [Plugin] Cannot invoke plugin(\(path)) with args: \(argString), error: \(error)")
         }
     }
 }
